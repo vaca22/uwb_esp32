@@ -37,7 +37,16 @@ int openspi(void) ;
  * returns 0 for success, or -1 for error
  */
 int closespi(void) ;
+int writetospi( uint16 headerLength,
+                const uint8 *headerBuffer,
+                uint32 bodylength,
+                const uint8 *bodyBuffer
+);
 
+int readfromspi( uint16	headerLength,
+                 const uint8 *headerBuffer,
+                 uint32 readlength,
+                 uint8 *readBuffer );
 #ifdef __cplusplus
 }
 #endif

@@ -11,22 +11,14 @@
  * @author DecaWave
  */
 #include <string.h>
+#include <driver/spi_master.h>
 
 #include "deca_spi.h"
 #include "deca_sleep.h"
 #include "deca_device_api.h"
 
 
-int writetospi_serial( uint16 headerLength,
-			   	    const uint8 *headerBuffer,
-					uint32 bodylength,
-					const uint8 *bodyBuffer
-				  );
 
-int readfromspi_serial( uint16	headerLength,
-			    	 const uint8 *headerBuffer,
-					 uint32 readlength,
-					 uint8 *readBuffer );
 /*! ------------------------------------------------------------------------------------------------------------------
  * Function: openspi()
  *
@@ -64,7 +56,10 @@ int closespi(void)
  * Takes two separate byte buffers for write header and write data
  * returns 0 for success, or -1 for error
  */
-int writetospi_serial
+
+extern spi_device_handle_t *mySpi;
+
+int writetospi
 (
     uint16       headerLength,
     const uint8 *headerBuffer,
@@ -72,7 +67,15 @@ int writetospi_serial
     const uint8 *bodyBuffer
 )
 {
-
+    uint8 an[500];
+    memcpy(an,headerBuffer,headerLength);
+    memcpy(an+headerLength,bodyBuffer,bodylength);
+    spi_transaction_t t;
+    memset(&t, 0, sizeof(t));       //Zero out the transaction
+    t.length = 8*(bodylength+headerLength);                     //Command is 8 bits
+    t.tx_buffer = an;               //The data is the cmd itself
+    t.user = (void *) 0;                //D/C needs to be set to 0
+    spi_device_polling_transmit(*mySpi, &t);  //Transmit!
 
     return 0;
 }
@@ -87,7 +90,7 @@ int writetospi_serial
  * or returns -1 if there was an error
  */
 
-int readfromspi_serial
+int readfromspi
 (
     uint16       headerLength,
     const uint8 *headerBuffer,
@@ -96,6 +99,17 @@ int readfromspi_serial
 )
 {
 
+    uint8 an[500];
+    memcpy(an,headerBuffer,headerLength);
+    spi_transaction_t t;
+    memset(&t, 0, sizeof(t));       //Zero out the transaction
+    t.length = 8*(readlength+headerLength);                     //Command is 8 bits
+    t.tx_buffer = an;               //The data is the cmd itself
+    t.user = (void *) 0;                //D/C needs to be set to 0
+    t.flags = SPI_TRANS_USE_RXDATA;
+    spi_device_polling_transmit(*mySpi, &t);  //Transmit!
+
+    memcpy(readBuffer,((uint8_t*)t.rx_data)+headerLength,readlength);
 
     return 0;
 } // end readfromspi()
