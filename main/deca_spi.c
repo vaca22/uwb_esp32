@@ -15,7 +15,6 @@
 #include "deca_spi.h"
 #include "deca_sleep.h"
 #include "deca_device_api.h"
-#include "port.h"
 
 
 int writetospi_serial( uint16 headerLength,
@@ -74,38 +73,9 @@ int writetospi_serial
 )
 {
 
-	int i=0;
-
-    decaIrqStatus_t  stat ;
-
-    stat = decamutexon() ;
-
-    SPIx_CS_GPIO->BRR = SPIx_CS;
-
-    for(i=0; i<headerLength; i++)
-    {
-    	SPIx->DR = headerBuffer[i];
-
-    	while ((SPIx->SR & SPI_I2S_FLAG_RXNE) == (uint16_t)RESET);
-
-    	SPIx->DR ;
-    }
-
-    for(i=0; i<bodylength; i++)
-    {
-     	SPIx->DR = bodyBuffer[i];
-
-    	while((SPIx->SR & SPI_I2S_FLAG_RXNE) == (uint16_t)RESET);
-
-		SPIx->DR ;
-	}
-
-    SPIx_CS_GPIO->BSRR = SPIx_CS;
-
-    decamutexoff(stat) ;
 
     return 0;
-} // end writetospi()
+}
 
 
 /*! ------------------------------------------------------------------------------------------------------------------
@@ -126,39 +96,6 @@ int readfromspi_serial
 )
 {
 
-	int i=0;
-
-    decaIrqStatus_t  stat ;
-
-    stat = decamutexon() ;
-
-    /* Wait for SPIx Tx buffer empty */
-    //while (port_SPIx_busy_sending());
-
-    SPIx_CS_GPIO->BRR = SPIx_CS;
-
-    for(i=0; i<headerLength; i++)
-    {
-    	SPIx->DR = headerBuffer[i];
-
-     	//while((SPIx->SR & SPI_I2S_FLAG_RXNE) == (uint16_t)RESET);
-			while(SPI_I2S_GetFlagStatus(SPI1, SPI_I2S_FLAG_RXNE) == RESET);
-
-     	readBuffer[0] = SPIx->DR ; // Dummy read as we write the header
-    }
-
-    for(i=0; i<readlength; i++)
-    {
-    	SPIx->DR = 0;  // Dummy write as we read the message body
-
-    	while((SPIx->SR & SPI_I2S_FLAG_RXNE) == (uint16_t)RESET);
- 
-	   	readBuffer[i] = SPIx->DR ;//port_SPIx_receive_data(); //this clears RXNE bit
-    }
-
-    SPIx_CS_GPIO->BSRR = SPIx_CS;
-
-    decamutexoff(stat) ;
 
     return 0;
 } // end readfromspi()

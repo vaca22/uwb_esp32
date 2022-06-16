@@ -10,14 +10,12 @@
  *
  * @author DecaWave
  */
-
+#include <freertos/FreeRTOS.h>
+#include <freertos/task.h>
 #include "deca_sleep.h"
-#include "port.h"
+
 
 void deca_sleep(unsigned int time_ms)
 {
-    /* This assumes that the tick has a period of exactly one millisecond. See CLOCKS_PER_SEC define. */
-    unsigned long end = portGetTickCount() + time_ms;
-    while ((signed long)(portGetTickCount() - end) <= 0)
-        ;
+    vTaskDelay(time_ms/10);
 }
