@@ -60,7 +60,7 @@ void app_main(void)
 
 
 
-    char tx_msg[10]="fuckgood";
+    char tx_msg[10]="lgh is a pig~!";
 
     while(1) {
 
