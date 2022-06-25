@@ -6,11 +6,11 @@
 #include "deca_device_api.h"
 #include "deca_regs.h"
 
-#define PIN_NUM_MISO 25
-#define PIN_NUM_MOSI 22
-#define PIN_NUM_CLK  23
-#define PIN_NUM_CS   19
-#define LCD_HOST    HSPI_HOST
+#define PIN_NUM_MISO 1
+#define PIN_NUM_MOSI 2
+#define PIN_NUM_CLK  19
+#define PIN_NUM_CS   3
+#define LCD_HOST    SPI2_HOST
 
 spi_device_handle_t *mySpi;
 static dwt_config_t config2 = {
@@ -38,7 +38,7 @@ void app_main(void)
             .max_transfer_sz=20*320*2+8
     };
     spi_device_interface_config_t devcfg={
-            .clock_speed_hz=2*1000*1000,           //Clock out at 10 MHz
+            .clock_speed_hz=1*1000*1000,           //Clock out at 10 MHz
             .mode=0,                                //SPI mode 0
             .spics_io_num=PIN_NUM_CS,               //CS pin
             .queue_size=7,                          //We want to be able to queue 7 transactions at a time
