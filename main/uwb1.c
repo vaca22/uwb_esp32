@@ -6,8 +6,8 @@
 #include "deca_device_api.h"
 #include "deca_regs.h"
 
-#define PIN_NUM_MISO 2
-#define PIN_NUM_MOSI 1
+#define PIN_NUM_MISO 1
+#define PIN_NUM_MOSI 2
 #define PIN_NUM_CLK  3
 #define PIN_NUM_CS   19
 #define LCD_HOST    SPI2_HOST
@@ -39,7 +39,7 @@ void app_main(void)
     };
     spi_device_interface_config_t devcfg={
             .clock_speed_hz=2*1000*1000,           //Clock out at 10 MHz
-            .mode=2,                                //SPI mode 0
+            .mode=0,                                //SPI mode 0
             .spics_io_num=PIN_NUM_CS,               //CS pin
             .queue_size=7,                          //We want to be able to queue 7 transactions at a time
     };
@@ -56,23 +56,23 @@ void app_main(void)
     }
     ESP_LOGE("fuick","dwm1000 init good!\r\n");
 //
-    dwt_configure(&config2);
-
-
-
-    char tx_msg[10]="lgh is a pig~!";
+//    dwt_configure(&config2);
 //
-    while(1) {
-
-        dwt_writetxdata(sizeof(tx_msg), (uint8_t*)tx_msg, 0);
-        dwt_writetxfctrl(sizeof(tx_msg), 0);
-
-
-        dwt_starttx(DWT_START_TX_IMMEDIATE);
-
-
-        vTaskDelay(10);
-
-        dwt_write32bitreg(SYS_STATUS_ID, SYS_STATUS_TXFRS);
-    }
+//
+//
+//    char tx_msg[13]="lgh is a pig~!";
+////
+//    while(1) {
+//
+//        dwt_writetxdata(sizeof(tx_msg), (uint8_t*)tx_msg, 0);
+//        dwt_writetxfctrl(sizeof(tx_msg), 0);
+//
+//
+//        dwt_starttx(DWT_START_TX_IMMEDIATE);
+//
+//
+//        vTaskDelay(10);
+//
+//        dwt_write32bitreg(SYS_STATUS_ID, SYS_STATUS_TXFRS);
+//    }
 }
