@@ -38,8 +38,8 @@ void app_main(void)
             .max_transfer_sz=20*320*2+8
     };
     spi_device_interface_config_t devcfg={
-            .clock_speed_hz=1*1000*1000,           //Clock out at 10 MHz
-            .mode=0,                                //SPI mode 0
+            .clock_speed_hz=2*1000*1000,           //Clock out at 10 MHz
+            .mode=1,                                //SPI mode 0
             .spics_io_num=PIN_NUM_CS,               //CS pin
             .queue_size=7,                          //We want to be able to queue 7 transactions at a time
     };
@@ -55,24 +55,24 @@ void app_main(void)
         vTaskDelay(100);
     }
     ESP_LOGE("fuick","dwm1000 init good!\r\n");
-
-    dwt_configure(&config2);
+//
+//    dwt_configure(&config2);
 
 
 
     char tx_msg[10]="lgh is a pig~!";
-
-    while(1) {
-
-        dwt_writetxdata(sizeof(tx_msg), (uint8_t*)tx_msg, 0);
-        dwt_writetxfctrl(sizeof(tx_msg), 0);
-
-
-        dwt_starttx(DWT_START_TX_IMMEDIATE);
-
-
-        vTaskDelay(10);
-
-        dwt_write32bitreg(SYS_STATUS_ID, SYS_STATUS_TXFRS);
-    }
+//
+//    while(1) {
+//
+//        dwt_writetxdata(sizeof(tx_msg), (uint8_t*)tx_msg, 0);
+//        dwt_writetxfctrl(sizeof(tx_msg), 0);
+//
+//
+//        dwt_starttx(DWT_START_TX_IMMEDIATE);
+//
+//
+//        vTaskDelay(10);
+//
+//        dwt_write32bitreg(SYS_STATUS_ID, SYS_STATUS_TXFRS);
+//    }
 }

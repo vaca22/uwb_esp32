@@ -10,6 +10,7 @@
  *
  */
 
+#include <esp_log.h>
 #include "deca_types.h"
 #include "deca_param_types.h"
 #include "deca_regs.h"
@@ -128,8 +129,10 @@ int dwt_initialise(uint16 config)
 
     // Read and validate device ID return -1 if not recognised
     dw1000local.deviceID =  dwt_readdevid() ;
+    ESP_LOGE("fuck","%u",dw1000local.deviceID);
     if (DWT_DEVICE_ID != dw1000local.deviceID) // MP IC ONLY (i.e. DW1000) FOR THIS CODE
     {
+        ESP_LOGE("fuck","%u",dw1000local.deviceID);
         return DWT_ERROR ;
     }
 
