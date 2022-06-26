@@ -6,10 +6,10 @@
 #include "deca_device_api.h"
 #include "deca_regs.h"
 
-#define PIN_NUM_MISO 41
-#define PIN_NUM_MOSI 42
-#define PIN_NUM_CLK  40
-#define PIN_NUM_CS   39
+#define PIN_NUM_MISO 2
+#define PIN_NUM_MOSI 1
+#define PIN_NUM_CLK  3
+#define PIN_NUM_CS   19
 #define LCD_HOST    SPI2_HOST
 
 spi_device_handle_t *mySpi;
