@@ -6,8 +6,8 @@
 #include "deca_device_api.h"
 #include "deca_regs.h"
 
-#define PIN_NUM_MISO 1
-#define PIN_NUM_MOSI 2
+#define PIN_NUM_MISO 38
+#define PIN_NUM_MOSI 37
 #define PIN_NUM_CLK  3
 #define PIN_NUM_CS   19
 #define LCD_HOST    SPI2_HOST
@@ -39,9 +39,10 @@ void app_main(void)
     };
     spi_device_interface_config_t devcfg={
             .clock_speed_hz=2*1000*1000,           //Clock out at 10 MHz
-            .mode=0,                                //SPI mode 0
+            .mode=2,                                //SPI mode 0
             .spics_io_num=PIN_NUM_CS,               //CS pin
-            .queue_size=7,                          //We want to be able to queue 7 transactions at a time
+            .queue_size=8,                          //We want to be able to queue 7 transactions at a time
+            .cs_ena_pretrans=5,
     };
     ret=spi_bus_initialize(LCD_HOST, &buscfg, SPI_DMA_CH_AUTO);
     ESP_ERROR_CHECK(ret);
