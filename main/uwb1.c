@@ -5,6 +5,7 @@
 #include <esp_log.h>
 #include "deca_device_api.h"
 #include "deca_regs.h"
+#include "spi_master_nodma.h"
 
 #define PIN_NUM_MISO 1
 #define PIN_NUM_MOSI 2
@@ -44,9 +45,10 @@ void app_main(void)
             .queue_size=8,                          //We want to be able to queue 7 transactions at a time
             .cs_ena_pretrans=1,
     };
-    ret=spi_bus_initialize(LCD_HOST, &buscfg, SPI_DMA_CH_AUTO);
-    ESP_ERROR_CHECK(ret);
-    ret=spi_bus_add_device(LCD_HOST, &devcfg, &spi);
+//    ret=spi_bus_initialize(LCD_HOST, &buscfg, SPI_DMA_CH_AUTO);
+//    ESP_ERROR_CHECK(ret);
+//    ret=spi_bus_add_device(LCD_HOST, &devcfg, &spi);
+    spi_nodma_bus_add_device(LCD_HOST, &buscfg, &devcfg, &spi);
 
     mySpi = &spi;
 
