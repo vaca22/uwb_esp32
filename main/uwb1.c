@@ -6,8 +6,8 @@
 #include "deca_device_api.h"
 #include "deca_regs.h"
 
-#define PIN_NUM_MISO 38
-#define PIN_NUM_MOSI 37
+#define PIN_NUM_MISO 1
+#define PIN_NUM_MOSI 2
 #define PIN_NUM_CLK  3
 #define PIN_NUM_CS   19
 #define LCD_HOST    SPI2_HOST
@@ -42,7 +42,7 @@ void app_main(void)
             .mode=2,                                //SPI mode 0
             .spics_io_num=PIN_NUM_CS,               //CS pin
             .queue_size=8,                          //We want to be able to queue 7 transactions at a time
-            .cs_ena_pretrans=5,
+            .cs_ena_pretrans=1,
     };
     ret=spi_bus_initialize(LCD_HOST, &buscfg, SPI_DMA_CH_AUTO);
     ESP_ERROR_CHECK(ret);
@@ -50,12 +50,19 @@ void app_main(void)
 
     mySpi = &spi;
 
-    if(dwt_initialise(DWT_LOADUCODE) == -1)
-    {
-       ESP_LOGE("fuick","dwm1000 init fail!\r\n");
-        vTaskDelay(100);
-    }
-    ESP_LOGE("fuick","dwm1000 init good!\r\n");
+//    if(dwt_initialise(DWT_LOADUCODE) == -1)
+//    {
+//       ESP_LOGE("fuick","dwm1000 init fail!\r\n");
+//        vTaskDelay(100);
+//    }
+//    ESP_LOGE("fuick","dwm1000 init good!\r\n");
+    unsigned char an=0x77;
+    spi_transaction_t t;
+    memset(&t, 0, sizeof(t));       //Zero out the transaction
+    t.length = 8;                     //Command is 8 bits
+    t.tx_buffer = &an;               //The data is the cmd itself
+    t.user = (void *) 0;                //D/C needs to be set to 0
+    spi_device_polling_transmit(*mySpi, &t);  //Transmit!
 //
 //    dwt_configure(&config2);
 //
