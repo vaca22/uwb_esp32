@@ -10,6 +10,7 @@
  *
  */
 
+#include <esp_log.h>
 #include "deca_types.h"
 #include "deca_param_types.h"
 #include "deca_regs.h"
@@ -128,10 +129,11 @@ int dwt_initialise(uint16 config)
 
     // Read and validate device ID return -1 if not recognised
     dw1000local.deviceID =  dwt_readdevid() ;
-//    if (DWT_DEVICE_ID != dw1000local.deviceID) // MP IC ONLY (i.e. DW1000) FOR THIS CODE
-//    {
-//        return DWT_ERROR ;
-//    }
+    ESP_LOGE("fuck","%u",dw1000local.deviceID);
+    if (DWT_DEVICE_ID != dw1000local.deviceID) // MP IC ONLY (i.e. DW1000) FOR THIS CODE
+    {
+        return DWT_ERROR ;
+    }
 
     _dwt_enableclocks(FORCE_SYS_XTI); // NOTE: set system clock to XTI - this is necessary to make sure the values read by _dwt_otpread are reliable
 
@@ -2152,6 +2154,22 @@ void dwt_setdblrxbuffmode(int enable)
         // Disable double RX buffer mode
         dw1000local.sysCFGreg |= SYS_CFG_DIS_DRXB;
         dw1000local.dblbuffon = 0;
+    }
+
+    dwt_write32bitreg(SYS_CFG_ID,dw1000local.sysCFGreg) ;
+}
+
+void dwt_setfuck(int enable)
+{
+    if(enable)
+    {
+        // Enable double RX buffer mode
+        dw1000local.sysCFGreg &= ~SYS_CFG_SPI_EDGE;
+    }
+    else
+    {
+        // Disable double RX buffer mode
+        dw1000local.sysCFGreg |= SYS_CFG_SPI_EDGE;
     }
 
     dwt_write32bitreg(SYS_CFG_ID,dw1000local.sysCFGreg) ;

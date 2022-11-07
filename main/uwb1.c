@@ -3,6 +3,7 @@
 #include <string.h>
 #include <freertos/task.h>
 #include <esp_log.h>
+#include <hal/spi_ll.h>
 #include "deca_device_api.h"
 #include "deca_regs.h"
 
@@ -25,6 +26,9 @@ static dwt_config_t config2 = {
         DWT_PHRMODE_STD, /* PHY header mode. */
         (1025 + 64 - 32) /* SFD timeout (preamble length + 1 + SFD length - PAC size). Used in RX only. */
 };
+
+
+
 void app_main(void)
 {
     esp_err_t ret;
@@ -45,13 +49,23 @@ void app_main(void)
     };
     ret=spi_bus_initialize(LCD_HOST, &buscfg, SPI_DMA_CH_AUTO);
     ESP_ERROR_CHECK(ret);
-    ret=spi_bus_add_device(LCD_HOST, &devcfg, &spi);
+    spi_bus_add_device(LCD_HOST, &devcfg, &spi);
+
 
     mySpi = &spi;
 
-    if(dwt_initialise(DWT_LOADUCODE) == -1)
+//    vTaskDelay(100);
+//    dwt_write32bitreg(SYS_CFG_ID,SYS_CFG_SPI_EDGE) ;
+//    vTaskDelay(100);
+//    if(dwt_initialise(DWT_LOADNONE) == -1)
+//    {
+//       ESP_LOGE("fuick","dwm1000 init fail!\r\n");
+//        vTaskDelay(100);
+//    }
+    dwt_setfuck(false);
+    if(dwt_initialise(DWT_LOADNONE) == -1)
     {
-       ESP_LOGE("fuick","dwm1000 init fail!\r\n");
+        ESP_LOGE("fuick","dwm1000 init fail!\r\n");
         vTaskDelay(100);
     }
     ESP_LOGE("fuick","dwm1000 init good!\r\n");
