@@ -74,12 +74,12 @@ void app_main(void)
 
 
 
-    char tx_msg[10]="lgh is a pig~!";
+    char tx_msg[10]="lgh123456";
 
     while(1) {
 
-        dwt_writetxdata(sizeof(tx_msg), (uint8_t*)tx_msg, 0);
-        dwt_writetxfctrl(sizeof(tx_msg), 0);
+        dwt_writetxdata(5, (uint8_t*)tx_msg, 0);
+        dwt_writetxfctrl(5, 0);
 
 
         dwt_starttx(DWT_START_TX_IMMEDIATE);
