@@ -128,10 +128,10 @@ int dwt_initialise(uint16 config)
 
     // Read and validate device ID return -1 if not recognised
     dw1000local.deviceID =  dwt_readdevid() ;
-    if (DWT_DEVICE_ID != dw1000local.deviceID) // MP IC ONLY (i.e. DW1000) FOR THIS CODE
-    {
-        return DWT_ERROR ;
-    }
+//    if (DWT_DEVICE_ID != dw1000local.deviceID) // MP IC ONLY (i.e. DW1000) FOR THIS CODE
+//    {
+//        return DWT_ERROR ;
+//    }
 
     _dwt_enableclocks(FORCE_SYS_XTI); // NOTE: set system clock to XTI - this is necessary to make sure the values read by _dwt_otpread are reliable
 
